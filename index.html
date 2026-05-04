@@ -3,23 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Registration Form</title>
+    <title>Core Network Terminal</title>
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --deep-dark: #0a0b10;
+            --panel-bg: rgba(20, 22, 30, 0.8);
+            --border-color: #1e293b;
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            background-color: var(--deep-dark);
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0a0b10 100%);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        h1 { font-size: 1.5rem; color: var(--neon-blue); }
+        h2 { font-size: 1.1rem; color: #fff; margin-bottom: 20px; border-left: 3px solid var(--neon-blue); padding-left: 10px; }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--neon-blue);
+            box-sizing: border-box;
+            font-family: 'Consolas', monospace;
+        }
+
+        input:focus { outline: none; border-color: var(--neon-blue); }
+
+        button {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--neon-blue);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover { background: #fff; box-shadow: 0 0 15px var(--neon-blue); }
+
+        /* Registry List Styles */
+        .member-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .member-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-tag {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--neon-blue);
+        }
+
+        /* Admin Table */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 0.75rem; color: var(--text-dim); padding: 10px; border-bottom: 1px solid var(--border-color); }
+        td { padding: 12px 10px; font-size: 0.9rem; border-bottom: 1px solid #161b22; }
+
+        .admin-actions { display: flex; gap: 10px; }
+        .accept { color: #4ade80; background: none; border: 1px solid #4ade80; padding: 4px 8px; border-radius: 4px; }
+        .reject { color: #f87171; background: none; border: 1px solid #f87171; padding: 4px 8px; border-radius: 4px; }
+        
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
-    <h1>Registration Form</h1>
-    <form id="registrationForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Register</button>
-    </form>
-    <script src="script.js"></script>
+
+    <div class="container" id="mainContainer">
+        <!-- Application View -->
+        <div id="userView">
+            <div class="glass-panel">
+                <h1>Network Application</h1>
+                <form id="regForm">
+                    <div class="input-group">
+                        <label>Identifier (Username)</label>
+                        <input type="text" id="username" required placeholder="User_01">
+                    </div>
+                    <div class="input-group">
+                        <label>Endpoint (Email)</label>
+                        <input type="email" id="email" required placeholder="node@network.com">
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 25px 0;">
+                    <h2>Technical Verification</h2>
+                    <div class="input-group">
+                        <label>1. What command displays the local IP configuration on Windows?</label>
+                        <input type="text" id="q1" required>
+                    </div>
+                    <div class="input-group">
+                        <label>2. Describe your primary objective for gaining access.</label>
+                        <textarea id="q2" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Transmit Application</button>
+                </form>
+            </div>
+
+            <div class="glass-panel">
+                <h2>Verified Members</h2>
+                <ul id="registryList" class="member-list">
+                    <!-- Approved users show here -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Admin View -->
+        <div id="adminView" class="hidden">
+            <div class="glass-panel">
+                <h1>Admin Command Center</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>IDENTIFIER</th>
+                            <th>TEST ANS</th>
+                            <th>OBJECTIVE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminQueue">
+                        <!-- Pending apps show here -->
+                    </tbody>
+                </table>
+                <button onclick="window.location.search=''" class="btn-submit" style="background: #334155; color: white; margin-top: 20px;">Return to Terminal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Storage Keys
+        const APPS_KEY = 'net_pending_apps';
+        const MEMBERS_KEY = 'net_approved_members';
+
+        const regForm = document.getElementById('regForm');
+        const userView = document.getElementById('userView');
+        const adminView = document.getElementById('adminView');
+
+        // Check if user is trying to access admin panel
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('admin') === 'true') {
+            userView.classList.add('hidden');
+            adminView.classList.remove('hidden');
+            renderAdminQueue();
+        }
+
+        // Initial Load of Registry
+        renderRegistry();
+
+        // Submit Logic
+        regForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const payload = {
+                id: Date.now(),
+                user: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                q1: document.getElementById('q1').value,
+                q2: document.getElementById('q2').value
+            };
+
+            const pending = JSON.parse(localStorage.getItem(APPS_KEY) || '[]');
+            pending.push(payload);
+            localStorage.setItem(APPS_KEY, JSON.stringify(pending));
+
+            alert('Data transmitted. Awaiting manual administrative clearance.');
+            regForm.reset();
+        });
+
+        // UI Rendering - Approved Registry
+        function renderRegistry() {
+            const members = JSON.parse(localStorage.getItem(MEMBERS_KEY) || '[]');
+            const list = document.getElementById('registryList');
+            
+            if (members.length === 0) {
+                list.innerHTML = '<li class="member-item" style="color: #64748b;">No active members found in registry.</li>';
+                return;
+            }
+
+            list.innerHTML = members.map(m => `
+                <li class="member-item">
+                    <span>${m.user}</span>
+                    <span class="status-tag">ACTIVE_NODE</span>
+                </li>
+            `).join('');
+        }
+
+        // UI Rendering - Admin Queue
+        function renderAdminQueue() {
+            const pending = JSON.parse(localStorage.getItem(APPS_KEY) || '[]');
+            const queue = document.getElementById('adminQueue');
+
+            if (pending.length === 0) {
+                queue.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px; color: #64748b;">Inbox Empty</td></tr>';
+                return;
+            }
+
+            queue.innerHTML = pending.map(a => `
+                <tr>
+                    <td>${a.user}<br><small style="color:#64748b">${a.email}</small></td>
+                    <td><code>${a.q1}</code></td>
+                    <td>${a.q2}</td>
+                    <td class="admin-actions">
+                        <button class="accept" onclick="processApp(${a.id}, true)">ACCEPT</button>
+                        <button class="reject" onclick="processApp(${a.id}, false)">REJECT</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Admin Decision Logic
+        window.processApp = (id, approved) => {
+            let pending = JSON.parse(localStorage.getItem(APPS_KEY) || '[]');
+            const appIndex = pending.findIndex(a => a.id === id);
+            
+            if (appIndex > -1) {
+                if (approved) {
+                    const members = JSON.parse(localStorage.getItem(MEMBERS_KEY) || '[]');
+                    members.push({ user: pending[appIndex].user });
+                    localStorage.setItem(MEMBERS_KEY, JSON.stringify(members));
+                }
+                pending.splice(appIndex, 1);
+                localStorage.setItem(APPS_KEY, JSON.stringify(pending));
+            }
+            
+            renderAdminQueue();
+            renderRegistry();
+        };
+    </script>
 </body>
 </html>
